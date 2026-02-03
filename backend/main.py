@@ -20,23 +20,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Force CPU on Render free tier
+device = "cpu"
 
-# Load Model
-model = get_model()
+model = None
 model_path = "../models/model.pth"
 
-if not os.path.exists(model_path):
-    raise RuntimeError("Model weights not found. Train the model first.")
-
-state_dict = torch.load(model_path, map_location=device)
-model.load_state_dict(state_dict)
-model.to(device)
-model.eval()
-
 _, eval_transform = get_transforms()
-
 CLASS_NAMES = ["Normal", "Cancer"]
+
+@app.on_event("startup")
+def load_model():
+    global model
+    if not os.path.exists(model_path):
+        raise RuntimeError("Model weights not found. Commit models/model.pth to GitHub!")
+    model = get_model()
+    state_dict = torch.load(model_path, map_location=device)
+    model.load_state_dict(state_dict)
+    model.to(device)
+    model.eval()
+    print("✅ Model loaded successfully")
 
 @app.get("/")
 def read_root():
