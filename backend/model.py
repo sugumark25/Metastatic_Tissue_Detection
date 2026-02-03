@@ -1,0 +1,23 @@
+import torch.nn as nn
+from torchvision import models
+
+def get_model(num_classes=2, pretrained=True):
+    try:
+        from torchvision.models import ResNet34_Weights
+        model = models.resnet34(weights=ResNet34_Weights.DEFAULT)
+    except:
+        model = models.resnet34(pretrained=pretrained)
+
+    # Freeze all layers
+    for param in model.parameters():
+        param.requires_grad = False
+
+    # Unfreeze layer4 (important)
+    for param in model.layer4.parameters():
+        param.requires_grad = True
+
+    # Modify last layer
+    num_ftrs = model.fc.in_features
+    model.fc = nn.Linear(num_ftrs, num_classes)
+
+    return model

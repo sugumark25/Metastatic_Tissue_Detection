@@ -1,0 +1,10 @@
+torch
+torchvision
+fastapi
+uvicorn
+python-multipart
+pandas
+numpy
+isort
+Pillow
+tqdm

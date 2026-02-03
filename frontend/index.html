@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metastatic Cancer Detection AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
+    </div>
+
+    <div class="container">
+        <header class="animate-entry">
+            <div class="logo">
+                <i class="fa-solid fa-dna"></i>
+                <span>MedVision AI</span>
+            </div>
+            <h1>Metastatic Tissue Detection</h1>
+            <p class="subtitle">Advanced Deep Learning for Histopathology Analysis</p>
+        </header>
+
+        <main>
+            <div class="upload-card glass-panel animate-entry delay-1" id="drop-zone">
+                <div class="upload-content" id="upload-content">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3>Upload Tissue Patch</h3>
+                    <p>Drag & drop or click to browse</p>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <button class="btn-primary pulse-animation" id="select-btn">Select Image</button>
+                    <p class="small-text">Supports PNG, JPG, TIF</p>
+                </div>
+
+                <div class="preview-container hidden" id="preview-container">
+                    <img id="image-preview" src="" alt="Preview">
+                    <div class="preview-overlay">
+                        <button class="btn-icon" id="remove-btn" title="Remove Image">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-area hidden" id="action-area">
+                <button id="analyze-btn" class="btn-analyze">
+                    <span>Analyze Sample</span>
+                    <i class="fa-solid fa-microscope"></i>
+                </button>
+            </div>
+
+            <div class="results-card glass-panel hidden" id="results-card">
+                <div class="result-header">
+                    <h2>Analysis Result</h2>
+                    <span class="status-badge" id="result-badge">Processing...</span>
+                </div>
+
+                <div class="result-body">
+                    <div class="probability-container">
+                        <div class="label-row">
+                            <span>Normal Tissue</span>
+                            <span id="prob-normal">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill normal-fill" id="bar-normal" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="probability-container">
+                        <div class="label-row">
+                            <span>Metastatic Tissue</span>
+                            <span id="prob-cancer">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill cancer-fill" id="bar-cancer" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation-card glass-panel hidden" id="explanation-card">
+                <div class="explanation-header">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <h3>Medical Insight</h3>
+                </div>
+                <div class="explanation-content" id="explanation-text">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by ResNet34 & PyTorch</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
