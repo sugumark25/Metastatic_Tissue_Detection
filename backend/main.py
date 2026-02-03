@@ -67,7 +67,6 @@ async def predict(file: UploadFile = File(...)):
 
     normal_prob = float(probs[0])
     cancer_prob = float(probs[1])
-
     prediction = CLASS_NAMES[int(probs.argmax())]
 
     return {
