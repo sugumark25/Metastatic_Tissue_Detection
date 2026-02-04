@@ -139,28 +139,64 @@ function updateResults(data) {
     barCancer.style.width = `${pCancer}%`;
 
     if (data.prediction === 'Cancer') {
-        resultBadge.textContent = 'METATASTATIC TISSUE DETECTED';
+        resultBadge.textContent = '⚠️ METASTATIC TISSUE DETECTED';
         resultBadge.className = 'status-badge badge-cancer';
         resultsCard.style.borderTopColor = 'var(--danger)';
 
         document.getElementById('explanation-text').innerHTML = `
-            <p><strong>Metastatic Cancer Detected:</strong> This sample shows characteristics consistent with metastatic tissue spread.</p>
-            <ul style="margin-top:10px; padding-left:20px;">
-                <li><strong>Spread Mechanism:</strong> Metastasis occurs when cancer cells break away from the original (primary) tumor, travel through the blood or lymph system, and form new tumors in other organs or tissues.</li>
-                <li><strong>Appearance:</strong> These cells often appear irregular in shape, have larger nuclei, and are densely packed compared to normal tissue.</li>
+            <p>This tissue sample exhibits characteristics consistent with <strong>metastatic cancer cells</strong>. Further clinical evaluation and confirmation is recommended.</p>
+            
+            <ul class="insight-list">
+                <li>
+                    <strong>What is Metastasis?</strong>
+                    Metastasis occurs when cancer cells break away from the original (primary) tumor, travel through the bloodstream or lymphatic system, and establish new tumors in distant organs or tissues.
+                </li>
+                <li>
+                    <strong>Cellular Appearance</strong>
+                    Metastatic cells typically display irregular morphology, enlarged nuclei, increased nuclear-to-cytoplasmic ratio, and dense cellular crowding compared to normal tissue.
+                </li>
+                <li>
+                    <strong>Clinical Significance</strong>
+                    Detection of metastatic spread is critical for staging and treatment planning. Immediate consultation with a pathologist and oncologist is advised.
+                </li>
             </ul>
+
+            <div class="medical-alert alert-cancer">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div class="medical-alert-text">
+                    <strong>Clinical Note:</strong> This AI prediction is for research and screening purposes only. A qualified pathologist must provide official diagnosis and interpretation.
+                </div>
+            </div>
         `;
     } else {
-        resultBadge.textContent = 'NORMAL TISSUE';
+        resultBadge.textContent = '✓ NORMAL TISSUE';
         resultBadge.className = 'status-badge badge-normal';
         resultsCard.style.borderTopColor = 'var(--success)';
 
         document.getElementById('explanation-text').innerHTML = `
-            <p><strong>Normal Tissue Detected:</strong> This sample appears consistent with healthy biological tissue.</p>
-            <ul style="margin-top:10px; padding-left:20px;">
-                <li><strong>Characteristics:</strong> Normal cells typically have uniform shapes, regular arrangement, and distinct boundaries.</li>
-                <li><strong>Structure:</strong> The tissue architecture is preserved without signs of uncontrolled growth or invasion.</li>
+            <p>This tissue sample appears consistent with <strong>normal, healthy biological tissue</strong> without evidence of malignancy.</p>
+            
+            <ul class="insight-list">
+                <li>
+                    <strong>Normal Cellular Characteristics</strong>
+                    Healthy cells typically display uniform morphology, regular spatial arrangement, well-defined cell boundaries, and appropriate nuclear size relative to cytoplasm.
+                </li>
+                <li>
+                    <strong>Tissue Architecture</strong>
+                    Normal tissue maintains preserved structural integrity with organized cellular layers, normal vasculature, and absence of abnormal cellular invasion or uncontrolled growth patterns.
+                </li>
+                <li>
+                    <strong>Assessment Outcome</strong>
+                    No histopathological evidence of malignancy or metastatic disease detected in this sample based on deep learning analysis.
+                </li>
             </ul>
+
+            <div class="medical-alert alert-normal">
+                <i class="fa-solid fa-circle-check"></i>
+                <div class="medical-alert-text">
+                    <strong>Reassurance Note:</strong> Normal findings support continued routine monitoring. However, clinical context and additional diagnostic tools should inform final diagnosis.
+                </div>
+            </div>
         `;
     }
 
