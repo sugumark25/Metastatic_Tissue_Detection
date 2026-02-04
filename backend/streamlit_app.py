@@ -6,29 +6,36 @@ from PIL import Image
 import os
 import gdown  # pip install gdown if you host model on Google Drive
 
+# --- Altair Fix for Streamlit ---
+try:
+    from altair.vegalite.v4.api import Chart
+    from altair.vegalite.v4.schema.core import Facet
+except ImportError:
+    try:
+        from altair.api import Chart
+        from altair.schema.core import Facet
+    except ImportError:
+        pass  # Streamlit cloud handles Altair installation separately
+
 # --- Page Config ---
 st.set_page_config(page_title="Metastatic Tissue Detector", layout="centered")
-
 st.title("🔬 Metastatic Tissue Detection")
 st.write("Upload a histopathology image (lymph node scans) to detect metastatic tissue.")
 
 # --- Model Path and Download ---
 MODEL_PATH = "models/model.pth"
-# If your model is too large for GitHub, host it on Google Drive and replace YOUR_FILE_ID
-MODEL_URL = "https://drive.google.com/uc?id=YOUR_FILE_ID"
+MODEL_URL = "https://drive.google.com/uc?id=YOUR_FILE_ID"  # Replace with your actual Google Drive file ID
 
 @st.cache_resource
 def load_model():
-    # Download model if not present
+    """Load PyTorch model from local or download if missing"""
     if not os.path.exists(MODEL_PATH):
         st.info("Downloading model...")
         os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
         gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
-
     try:
-        # Load your PyTorch model
         model = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
-        model.eval()  # Set to evaluation mode
+        model.eval()
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
@@ -37,17 +44,13 @@ def load_model():
 model = load_model()
 
 # --- Image Preprocessing ---
-def preprocess_image(image):
-    """
-    Resize and normalize the uploaded image to feed into the PyTorch model.
-    Adjust size to your model's input size (example: 96x96)
-    """
+def preprocess_image(image: Image.Image):
+    """Resize and normalize the image for the PyTorch model"""
     transform = transforms.Compose([
-        transforms.Resize((96, 96)),   # Adjust to your model input
-        transforms.ToTensor(),          # Convert to tensor and scale 0-1
+        transforms.Resize((96, 96)),  # Adjust to your model input size
+        transforms.ToTensor(),         # Scale pixels to [0,1]
     ])
-    img_tensor = transform(image).unsqueeze(0)  # Add batch dimension
-    return img_tensor
+    return transform(image).unsqueeze(0)  # Add batch dimension
 
 # --- Sidebar Upload ---
 st.sidebar.header("Settings")
@@ -63,13 +66,11 @@ if uploaded_file is not None:
     if st.button("Run Analysis"):
         if model is not None:
             with st.spinner("Analyzing cells..."):
-                # Preprocess image
                 input_tensor = preprocess_image(image)
-
-                # Run prediction
                 with torch.no_grad():
                     output = model(input_tensor)
-                    if output.shape[1] == 1:  # Sigmoid output for binary classification
+                    # Binary classification logic
+                    if output.shape[1] == 1:  # Sigmoid
                         confidence = torch.sigmoid(output)[0][0].item()
                     else:  # Softmax with 2 outputs
                         probs = torch.softmax(output, dim=1)
