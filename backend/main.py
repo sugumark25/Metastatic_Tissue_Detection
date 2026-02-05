@@ -35,7 +35,9 @@ device = "cpu"
 
 # ============ GLOBAL VARIABLES ============
 model = None  # Will be loaded on startup
-model_path = "../models/model.pth"  # Path to saved model weights
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "model.pth")
+  # Path to saved model weights
 
 _, eval_transform = get_transforms()  # Evaluation transforms (no augmentation)
 CLASS_NAMES = ["Normal", "Cancer"]  # Human-readable class labels
